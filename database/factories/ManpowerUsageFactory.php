@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Developer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ManpowerUsageFactory extends Factory
@@ -14,7 +15,9 @@ class ManpowerUsageFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'developer_id' => Developer::all()->random()->id,
+            'usage' => $this->faker->randomElement([0,16,20,24,30,40]),
+            'created_at' => $this->faker->dateTimeThisYear,
         ];
     }
 }

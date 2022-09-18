@@ -19,7 +19,7 @@ class LeaveFactory extends Factory
             'developer_id' => Developer::all()->random()->id,
             'leave_type_id' => LeaveType::all()->random()->id,
             'start' => $this->faker->unique()->dateTimeThisYear,
-            'day' => $this->faker->numberBetween(1,3),
+            'days' => $this->faker->numberBetween(1,3),
             'reason' => $this->faker->optional()->sentence,
         ];
     }

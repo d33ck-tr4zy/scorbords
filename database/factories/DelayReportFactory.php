@@ -15,10 +15,15 @@ class DelayReportFactory extends Factory
      */
     public function definition()
     {
+        $date = $this->faker->unique()->dateTimeThisYear;
         return [
             'developer_id' => Developer::all()->random()->id,
             'project_id' => Project::all()->random()->id,
-            ''
+            'date_assigned' => $date,
+            'project_hours' => $this->faker->randomElement([8,16,24,40]),
+            'additional_hours' => $this->faker->randomElement([8,16,24,40]),
+            'created_at' => $date
+
         ];
     }
 }

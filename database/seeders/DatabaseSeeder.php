@@ -15,22 +15,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-         \App\Models\User::factory()->create([
-             'name' => 'Gabriel Aswinta',
-             'email' => 'gabriel.aswinta@webimp.com.sg',
-             'is_admin' => true,
-             'email_verified_at' => now(),
-             'password' => Hash::make('dilarang masuk'), // password
-             'remember_token' => Str::random(10),
-         ]);
-
-        \App\Models\User::factory()->create([
-            'name' => 'Imannuel Benny',
-            'email' => 'imannuel.benny@webimp.com.sg',
-            'is_admin' => false,
-            'email_verified_at' => now(),
-            'password' => Hash::make('12345'), // password
-            'remember_token' => Str::random(10),
-        ]);
+        $this->call(UserSeeder::class);
+        $this->call(LeaveTypeSeeder::class);
+        $this->call(DelayReasonSeeder::class);
+        $this->call(ScoreTypeSeeder::class);
+        $this->call(HolidaySeeder::class);
+        $this->call(ScoreWeightSeeder::class);
+        $this->call(ProjectSeeder::class);
+        $this->call(DeveloperSeeder::class);
     }
 }

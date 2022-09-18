@@ -14,10 +14,8 @@ class CreateDelayReasonDelayReportTable extends Migration
     public function up()
     {
         Schema::create('delay_reason_delay_report', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(\App\Models\DelayReport::class);
-            $table->foreignIdFor(\App\Models\DelayReason::class);
-            $table->timestamps();
+            $table->foreignIdFor(\App\Models\DelayReport::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(\App\Models\DelayReason::class)->constrained()->cascadeOnDelete();
         });
     }
 

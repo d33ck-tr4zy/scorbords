@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\ScoreWeight;
 use Illuminate\Database\Seeder;
 
 class ScoreWeightSeeder extends Seeder
@@ -13,6 +14,6 @@ class ScoreWeightSeeder extends Seeder
      */
     public function run()
     {
-        //
+        ScoreWeight::factory()->count(20)->create();
     }
 }

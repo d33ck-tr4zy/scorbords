@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\DelayReason;
 use Illuminate\Database\Seeder;
 
 class DelayReasonSeeder extends Seeder
@@ -13,37 +14,37 @@ class DelayReasonSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('delay_reasons')->insert([
+        DelayReason::factory()->create([
             'reason' => 'Insufficient Time',
             'value' => 1,
             'description' => "Low Fault: Dev don't have control on the requirement and time allocation",
         ]);
 
-        DB::table('delay_reasons')->insert([
+        DelayReason::factory()->create([
             'reason' => 'Insufficient knowledge',
             'value' => 2,
             'description' => "Medium Fault: Should communicate prior to entering timeline or ask for help",
         ]);
 
-        DB::table('delay_reasons')->insert([
+        DelayReason::factory()->create([
             'reason' => 'Miscommunication',
             'value' => 3,
             'description' => "High Fault: Fail in doing proper communication and follow-ups",
         ]);
 
-        DB::table('delay_reasons')->insert([
+        DelayReason::factory()->create([
             'reason' => 'Changes in requirement',
             'value' => 0,
             'description' => "No Fault: Not caused by Dev mistake",
         ]);
 
-        DB::table('delay_reasons')->insert([
+        DelayReason::factory()->create([
             'reason' => 'Too much ad-hoc',
             'value' => 1,
             'description' => "Low Fault : Should be able to manage timeline",
         ]);
 
-        DB::table('delay_reasons')->insert([
+        DelayReason::factory()->create([
             'reason' => 'Negligence in QC',
             'value' => 3,
             'description' => "High Fault : Didn't do the due diligence",

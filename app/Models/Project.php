@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Project extends Model
 {
     use HasFactory;
+
+    public function developer(){
+        return $this->belongsToMany(Developer::class);
+    }
+
+    public function delayReports(){
+        return $this->hasMany(DelayReport::class);
+    }
 }

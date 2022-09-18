@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Holiday;
 use Illuminate\Database\Seeder;
 
 class HolidaySeeder extends Seeder
@@ -13,6 +14,6 @@ class HolidaySeeder extends Seeder
      */
     public function run()
     {
-        //
+        Holiday::factory(40)->create();
     }
 }

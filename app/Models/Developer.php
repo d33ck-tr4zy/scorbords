@@ -18,14 +18,14 @@ class Developer extends Model
         'is_active',
     ];
 
-    public function delayReports(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function delayReports()
     {
         return $this->hasMany(DelayReport::class);
     }
 
     public function projects()
     {
-        return $this->hasMany(Project::class);
+        return $this->belongsToMany(Project::class);
     }
 
     public function leaves()
@@ -38,4 +38,18 @@ class Developer extends Model
         return $this->belongsTo(User::class, 'email', 'email');
     }
 
+    public function manpowerUsage()
+    {
+        return $this->hasMany(ManpowerUsage::class);
+    }
+
+    public function score()
+    {
+        return $this->hasMany(Score::class);
+    }
+
+    public function efficiency()
+    {
+        return $this->hasMany(Efficiency::class);
+    }
 }

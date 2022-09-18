@@ -15,8 +15,8 @@ class CreateDelayReportsTable extends Migration
     {
         Schema::create('delay_reports', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\Developer::class);
-            $table->foreignIdFor(\App\Models\Project::class);
+            $table->foreignIdFor(\App\Models\Developer::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignIdFor(\App\Models\Project::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->date('date_assigned');
             $table->integer('project_hours');
             $table->integer('additional_hours');

@@ -20,4 +20,12 @@ class DelayReport extends Model
     {
         return $this->belongsToMany(DelayReason::class);
     }
+
+    public function developer(){
+        return $this->belongsTo(Developer::class);
+    }
+
+    public function project(){
+        return $this->belongsTo(Project::class);
+    }
 }
