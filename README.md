@@ -1,64 +1,144 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://scoreboard.sipekong.com/img/scoreboard-logo-red.png" width="400"></a></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
 
-## About Laravel
+## About ScoreboardS
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+ScoreboardS is an internal web application for [Web Imp Pte Ltd.](https://webimp.com.sg) Front End Team.
+ScoreboardS is running under the [Laravel](https://laravel.com) framework.
+That being said, ScoreboardS and Laravel has no affiliation other than previously stated above.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Background
+This application will be used to track the progress of the Front-End Developers in Web Imp Pte. Ltd.  
+The main aim is to Output :
+* Manpower hour usage for every developer per week/month and for the whole team per week/month
+* Efficiency of individual developers and team
+* The development of each developer and the whole team by monitoring their scores in several field of interest
+***
+## Concept
+* The main entity is the **Developer** which will produce the raw data for the whole app
+* **Project** is only there to support other entity
+* **Score** will be entered weekly and calculated towards Delays, Manpowers usage, and Efficiency
+    * Type of scores will be
+        * Speed - Tells how fast a developer can come out with solution to a problem, any delay or not
+        * Quality - Tells how good a developer solve problem, the quality of the project done
+        * Communication - Tells how good a developer communicate project issue, progress and additional information to their peers.
+    * Each type will have weight defined for each month
+* **Delay** Report should be tracked and the **reason** of the delay, **additional hours** needed will be used to calculate the efficiency of the Developer
+    * Each reason will have value by default:
+        * Insufficient Time = 1 (Low Fault: Dev don't have control on the requirement and time allocation)
+        * Insufficient knowledge = 2 (Medium Fault: Should communicate prior to entering timeline or ask for help)
+        * Miscommunication = 3 (High Fault: Fail in doing proper communication and follow-ups)
+        * Changes in requirement = 0 (No Fault: Not caused by Dev mistake)
+        * Too much ad-hoc = 1 (Low Fault : Should be able to manage timeline)
+        * Negligence in QC = 3 (High Fault : Didn't do the due diligence)
+* **Manpower** for each developer will be calculated based on 5 days working hour in 8 hours/day
+    * Manpower targeted will be affected by the leave and holiday during the period of calculation
+* **Efficiency** should be calculated based on the Manpower usage percentage times weekly score
+* **Leave** and **Holiday** will have impact on Manpower calculation and **Efficiency** calculation
+    * Leave is a used manpower and will not affect the number of targeted manpower
+    * Holiday is unused manpower and will affect the targeted manpower
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Calculations
+* **Manpower**
+    * *Targeted/Regular*
+        * Working week = the number of monday in a month.
+            * e.g. if the month start on Tuesday, the first monday will be on 7th on that month
+            * e.g. if the month ended on Tuesday, the last monday will be on the EOD-1. This means that the 1st to 3rd day of next month will be counted toward the current month manpower
+        * Developer weekly = 8 hours x 5 days = 40 hours
+            * If developer have leave the number will stay the same
+            * If there are holidays the number will be deducted by how many days x 8 hours
+        * Team weekly = Number of active Developers x Developer weekly value
+        * Team Monthly = Team weekly value x Number of working week in the month
+    * *Used*
+        * Reported by the Developer at Team Meeting
+        * Confirmed by the Lead
 
-## Learning Laravel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+* **Delays**
+    * Single Delay report score = (Total of Reason Value) x (Additional Hours / Project Hours)
+    * Weekly Delay Score = Average of Single Delay report score
+        * e.g.(1) A dev produces a single delay with reason of insufficient time and Too much ad-hocs and asking for additional hours of 4 hours from a 5days project  
+          Single Delay report score = (1 + 1) x (4 / (5 x 8)) = 2 x (4/40) = 0.2  
+          Since Weekly Delay score is average of single delay report and for this example the dev produces only 1 so the Weekly Delay Score = 0.2
+        * e.g.(2) Say the same Developer have another delay report for the same week with reason: Insufficient Knowledge, Miscommunication and Changes in Requirement with additional hours of 16 hours of 3days project.  
+          Single Delay report score =   (2 + 3 + 0) x (16/ (3 x 8)) = 5 x (16/24) = 3.3  
+          With the Single delay report from e.g(1) the Weekly Delay Score for this dev =  
+          Average(0.2 + 3.3) = 1.75
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## Laravel Sponsors
+* **Score**
+    * Will be in the range of 1 to 10
+    * Defined by the Lead at each Team Meeting or at anytime during the week
+    * Every type will have weight
+    * *Examples*
+        * Given this month Score Weight : Speed = 30, Quality = 30, Communication = 40,
+        * On Monday Lead input **Speed** score for Dev 1 = 2
+        * Tue input **Speed** = 4, **Communication** = 7
+        * Wed input **Quality** = 5, **Communication** = 6
+        * Thur Dev 1 on sick leave
+        * Fri, on team meeting input **Speed** = 3, **Quality** = 7, **Communication** = 6, **Delay** = 0.2
+        * The Score for this week is = (((avg Speed x Speed Weight) + (avg Quality x Quality Weight) + (avg Communication x Communication Weight)) / (Total Weight)) - Weekly Delay Score
+        * = (((3 x 30) + (7 x 30) + (6.3 x 40)) / 100) - 0.2 = 5.03
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+* **Efficiency**
+    * *Weekly*
+        * *Developer's Weekly*  
+          ((Weekly Manpower Usage/Targeted Weekly Manpower) x 100) x (Weekly Score / 10 *(score is base on 10)*)
+        * e.g using samples from previous, and Dev 1 is using 32 hours of his weekly manpower:  
+          ((32/40) x 100) x (5.03 / 10) = 40.24
+        * *Team Weekly*  
+          Average(Developer Weekly) * Active Developer count
+    * *Monthly*
+        * *Developer's Monthly*  
+          Average(Developer's Weekly Efficiency) x Total number of week in a month
+        * *Team Monthly*
 
-### Premium Partners
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+***
+## Models
+### Developers
+#### Table Structure
+* id
+* full_name
+* call_sign
+* email
+* joined_date
+* released_date
+* is_active
 
-## Contributing
+#### Relationship
+* Score - Will track the score of the developer for each type and time
+* Delay - List the delay report produces by the developer
+* Project - Track which project the developer is assigned to at any given time
+* Leave - Track the leave developer have taken
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+#### Details
+Developers will be the center of the application.
+***
 
-## Code of Conduct
+### Delay
+### Table Structure
+* id
+* developer_id
+* project_id
+* date
+* hours
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Relationship
+* Developer - Who created this delay report
+*
+
+
+## About Laravel in ScoreboardS
+
+All documentation and licenses about laravel can be found in Laravel [documentation](https://laravel.com/docs).
 
 ## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability within ScoreboardS, please send an e-mail to Gabriel Aswinta via [gabriel.aswinta@webimp.com.sg](mailto:gabriel.aswinta@webimp.com.sg). All security vulnerabilities will be promptly addressed.
 
 ## License
 
+ScoreboardS is inheriting the Laravel framework licenses.
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+

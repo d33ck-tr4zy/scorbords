@@ -41,4 +41,15 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+    public function developer()
+    {
+        return $this->hasOne(Developer::class, 'email', 'email');
+    }
+
+    public function getIsDeveloperAttribute(): bool
+    {
+        return $this->developer()->get()->isNotEmpty();
+    }
 }
